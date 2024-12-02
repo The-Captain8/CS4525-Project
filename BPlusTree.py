@@ -188,10 +188,7 @@ class BPlusTree:
         if key_start is not None:
             current = self.key_search(key_start)
         else:
-            while not current.isLeaf:
-                if isinstance(current.keys[0], Node):
-                    current = current.keys[0]
-                    continue
+            current = self.get_first_leaf()
 
         sum = 0
         while True:
@@ -204,7 +201,78 @@ class BPlusTree:
             else:
                 return sum
 
+    def average(self, key_start=None, key_end=9999999999999999):
+        current = self.root
 
+        if current is None:
+            raise KeyError(f'Key {key_start} not found')
+
+        if key_start is not None:
+            current = self.key_search(key_start)
+        else:
+            current = self.get_first_leaf()
+
+        sum = 0
+        counter = 0
+        while True:
+            for val, key in zip(current.values, current.keys):
+                counter += 1
+                if key < key_end:
+                    sum += int(val)
+
+            if current.next is not None:
+                current = current.next
+            else:
+                if counter != 0:
+                    return sum / counter
+
+    def max(self, key_start=None, key_end=9999999999999999):
+        current = self.root
+
+        if current is None:
+            raise KeyError(f'Key {key_start} not found')
+
+        if key_start is not None:
+            current = self.key_search(key_start)
+        else:
+            current = self.get_first_leaf()
+
+        maximum = None
+        while True:
+            for val, key in zip(current.values, current.keys):
+                if key < key_end:
+                    int_val = int(val)
+                    if maximum is None or int_val > maximum:
+                        maximum = int_val
+
+            if current.next is not None:
+                current = current.next
+            else:
+                return maximum
+
+    def min(self, key_start=None, key_end=9999999999999999):
+        current = self.root
+
+        if current is None:
+            raise KeyError(f'Key {key_start} not found')
+
+        if key_start is not None:
+            current = self.key_search(key_start)
+        else:
+            current = self.get_first_leaf()
+
+        minimum = None
+        while True:
+            for val, key in zip(current.values, current.keys):
+                if key < key_end:
+                    int_val = int(val)
+                    if minimum is None or int_val < minimum:
+                        minimum = int_val
+
+            if current.next is not None:
+                current = current.next
+            else:
+                return minimum
 
     def remove(self, value):
         pass
@@ -225,4 +293,6 @@ if __name__ == '__main__':
     bplustree.print_tree()
     test_date = "11/22/2024".split('/')
     sumo = bplustree.sum(datetime(int(test_date[2]), int(test_date[0]), int(test_date[1])).timestamp())
+    mostest = bplustree.max()
+    minest = bplustree.min()
     pass
