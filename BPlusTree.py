@@ -194,7 +194,7 @@ class BPlusTree:
         while True:
             for val, key in zip(current.values, current.keys):
                 if key < key_end:
-                    sum += int(val)
+                    sum += float(val)
 
             if current.next is not None:
                 current = current.next
@@ -218,7 +218,7 @@ class BPlusTree:
             for val, key in zip(current.values, current.keys):
                 counter += 1
                 if key < key_end:
-                    sum += int(val)
+                    sum += float(val)
 
             if current.next is not None:
                 current = current.next
