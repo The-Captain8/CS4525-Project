@@ -1,6 +1,7 @@
 import math
 from datetime import datetime
 
+
 class Node:
     def __init__(self, order):
         self.order = order
@@ -30,7 +31,6 @@ class Node:
             self.keys = [key]
 
 
-
 class BPlusTree:
     def __init__(self, order):
         self.root = Node(order)
@@ -43,13 +43,13 @@ class BPlusTree:
             temp = current.values
             for i in range(len(temp)):
                 if value == temp[i]:
-                    current = current.keys[i+1]
+                    current = current.keys[i + 1]
                     break
                 elif value < temp[i]:
                     current = current.keys[i]
                     break
                 elif i + 1 == len(current.values):
-                    current = current.keys[i+1]
+                    current = current.keys[i + 1]
                     break
         return current
 
@@ -61,15 +61,6 @@ class BPlusTree:
         return current
 
     def key_search(self, key):
-        """
-        Search for the leaf node that may contain the given key.
-
-        Parameters:
-        key (int/float/str): The key to search for.
-
-        Returns:
-        Node: The leaf node where the key should be located.
-        """
         current = self.get_first_leaf()
 
         while True:
@@ -93,7 +84,7 @@ class BPlusTree:
                     return False
         return False
 
-    def insert(self, value, key):
+    def insert(self, value, key: int):
         value = str(value)
         old_node = self.search(value)
         old_node.insert_at_leaf(old_node, value, key)
@@ -177,6 +168,28 @@ class BPlusTree:
                     lev_leaf = lev
                     leaf = x
                     flag = 1
+
+    def get_key_range(self, key_start=None, key_end=9999999999999999):
+        current = self.root
+        return_set = []
+
+        if current is None:
+            raise KeyError(f'Key {key_start} not found')
+
+        if key_start is not None:
+            current = self.key_search(key_start)
+        else:
+            current = self.get_first_leaf()
+
+        while True:
+            for val, key in zip(current.values, current.keys):
+                if key < key_end:
+                    return_set.append([key, val])
+
+            if current.next is not None:
+                current = current.next
+            else:
+                return return_set
 
     # key_start is inclusive, key_end is exclusive
     def sum(self, key_start=None, key_end=9999999999999999):
@@ -273,26 +286,3 @@ class BPlusTree:
                 current = current.next
             else:
                 return minimum
-
-    def remove(self, value):
-        pass
-
-    def update(self, key, value):
-        pass
-
-if __name__ == '__main__':
-    bplustree = BPlusTree(3)
-    dates = ["11/22/2024", "11/21/2024", "11/20/2024", "11/19/2024", "11/18/2024"]
-    values = ['5', '15', '25', '35', '45']
-
-    for value, date in zip(values, dates):
-        formatted_date = date.split('/')
-        formatted_date = datetime(int(formatted_date[2]), int(formatted_date[0]), int(formatted_date[1])).timestamp()
-        bplustree.insert(value, formatted_date)
-
-    bplustree.print_tree()
-    test_date = "11/22/2024".split('/')
-    sumo = bplustree.sum(datetime(int(test_date[2]), int(test_date[0]), int(test_date[1])).timestamp())
-    mostest = bplustree.max()
-    minest = bplustree.min()
-    pass
