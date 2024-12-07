@@ -84,4 +84,4 @@ python main.py
 
 This will output performance difference for indexed and unindexed SQLite database and my B+ Tree.
 
-Note: Testing for large datasets has been commented out as it takes a couple of minutes.
+**Note: Testing for large datasets has been commented out as it takes about 30 minutes.**

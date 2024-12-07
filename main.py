@@ -52,7 +52,7 @@ def run_tests(data, index=False):
     for row in data.iterrows():
         date = row[1]['Date']
         price = row[1]['Price']
-        tree.insert(price, date)
+        tree.insert(float(price), date)
 
     end = time.perf_counter_ns()
     results.append(end - start)
@@ -62,6 +62,26 @@ def run_tests(data, index=False):
         date = row[1]['Date']
         price = row[1]['Price']
         cur.execute("insert into data (timestamp, value) values(?, ?)", (date, price))
+
+    end = time.perf_counter_ns()
+    results.append(end - start)
+    time_data.append(results)
+
+    # Search time
+    results = ["Search"]
+
+    start = time.perf_counter_ns()
+    for row in data.iterrows():
+        price = row[1]['Price']
+        tree.search(float(price))
+
+    end = time.perf_counter_ns()
+    results.append(end - start)
+
+    start = time.perf_counter_ns()
+    for row in data.iterrows():
+        price = row[1]['Price']
+        cur.execute(f"select value from data where value = {price}")
 
     end = time.perf_counter_ns()
     results.append(end - start)

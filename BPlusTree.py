@@ -42,10 +42,10 @@ class BPlusTree:
         while not current.isLeaf:
             temp = current.values
             for i in range(len(temp)):
-                if value == temp[i]:
+                if value == float(temp[i]):
                     current = current.keys[i + 1]
                     break
-                elif value < temp[i]:
+                elif value < float(temp[i]):
                     current = current.keys[i]
                     break
                 elif i + 1 == len(current.values):
@@ -84,8 +84,7 @@ class BPlusTree:
                     return False
         return False
 
-    def insert(self, value, key: int):
-        value = str(value)
+    def insert(self, value: float, key: int):
         old_node = self.search(value)
         old_node.insert_at_leaf(old_node, value, key)
 
